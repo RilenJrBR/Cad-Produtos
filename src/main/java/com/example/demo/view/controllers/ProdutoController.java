@@ -2,6 +2,8 @@ package com.example.demo.view.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.example.demo.model.Produto;
 import com.example.demo.services.ProdutoServices;
 import com.example.demo.view.model.AtualizacaoDeEstoqueDTO;
@@ -49,13 +51,14 @@ public class ProdutoController {
     }
 
     @PutMapping
-    public ResponseEntity<Produto> atualizarEstoque(@RequestBody AtualizacaoDeEstoqueDTO dto){
-        return new ResponseEntity<>(servico.atualizar(dto.getId(), dto.getQuantidadeEstoque()), HttpStatus.OK);
+    public AtualizacaoDeEstoqueDTO atualizarEstoque(@RequestBody @Valid AtualizacaoDeEstoqueDTO dto) {
+        Produto produto = servico.atualizar(dto.getId(), dto.getQuantidadeEstoque());
+        return AtualizacaoDeEstoqueDTO.parse(produto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> obterProduto(@PathVariable String id){
-        return new ResponseEntity<>(servico.obterProduto(id), HttpStatus.OK);
+    public Produto obterProduto(@PathVariable String id) {
+        return servico.obterProduto(id);
     }
 
     @DeleteMapping("/{id}")
